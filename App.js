@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     ...Platform.select({
-      ims: {
+      ios: {
         shadowColor: "rgb(50, 50, 50)",
         shadowOpacity: 0.5,
         shadowRadius: 5,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         },
       },
       android: {
-        elevations: 3
+        elevation: 3
       }
     })
   },

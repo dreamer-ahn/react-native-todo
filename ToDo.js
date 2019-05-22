@@ -12,20 +12,22 @@ import PropTypes from "prop-types";
 const { width, height } = Dimensions.get("window");
 
 export default class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { isEditing: false, toDoValue: props.text };
+    };
     static propTypes = {
         id: PropTypes.string.isRequired,
         text: PropTypes.string.isRequired,
         isCompleted: PropTypes.bool.isRequired,
-        // deleteToDo: PropTypes.func.isCompleted,
-    }
-    state = {
-        isCompleted: false,
-        isEditing: false,
-        toDoValue: ""
-    }
+        updateToDo: PropTypes.func.isRequired,
+        deleteToDo: PropTypes.func.isRequired,
+        uncompleteToDo: PropTypes.func.isRequired,
+        completeToDo: PropTypes.func.isRequired,
+    };
     render() {
-        const { isCompleted, isEditing, toDoValue } = this.state;
-        const { text, id, deleteToDo } = this.props;
+        const { isEditing, toDoValue } = this.state;
+        const { text, id, updateToDo, deleteToDo, isCompleted } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.column}>
@@ -83,29 +85,33 @@ export default class App extends Component {
                 ) }
             </View>
         );
-    }
+    };
     _toggleComplete = () => {
-        this.setState(prevState => {
-            return {
-                isCompleted: !prevState.isCompleted
-            };
-        });
-    }
+        const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
+        if(isCompleted) {
+            uncompleteToDo(id);
+        } else {
+            completeToDo(id);
+        }
+    };
     _startEditing = () => {
         const { text } = this.props;
         this.setState({
-            isEditing: true,
-            toDoValue: text
+            isEditing: true
         });
-    }
+    };
     _finishEditing = () => {
+        const { toDoValue } = this.state;
+        const { updateToDo, id } = this.props;
+
+        updateToDo(id, toDoValue);
         this.setState({
-            isEditing: false
+            isEditing: false,
         });
-    }
+    };
     _controllInput = (text) => {
         this.setState({ toDoValue: text });
-    }
+    };
 };
 
 const styles = StyleSheet.create({
